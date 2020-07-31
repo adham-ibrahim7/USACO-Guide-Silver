@@ -1,11 +1,6 @@
-/*
-ID: adhamib1
-LANG: JAVA
-TASK: homework
-*/
 import java.io.*;
 import java.util.*;
-
+//http://www.usaco.org/index.php?page=viewproblem2&cpid=762
 class MyCowAteMyHomework {
 	static int ni(StringTokenizer st) {
 		return Integer.parseInt(st.nextToken());

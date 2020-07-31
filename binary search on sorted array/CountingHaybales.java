@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-
+//http://www.usaco.org/index.php?page=viewproblem2&cpid=666
 public class CountingHaybales {
 	static int ni(StringTokenizer st) {
 		return Integer.parseInt(st.nextToken());

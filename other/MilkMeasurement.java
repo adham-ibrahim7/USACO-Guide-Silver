@@ -5,7 +5,7 @@ TASK: measurement
 */
 import java.io.*;
 import java.util.*;
-
+//http://www.usaco.org/index.php?page=viewproblem2&cpid=763
 class MilkMeasurement {
 	static class InputReader {
 		BufferedReader reader;

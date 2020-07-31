@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
-//https://cses.fi/problemset/task/1660
-public class SubarraySums {
+//https://cses.fi/problemset/task/1640
+public class SumOfTwo {
 	static int ni(StringTokenizer st) {
 		return Integer.parseInt(st.nextToken());
 	}
@@ -25,23 +25,37 @@ public class SubarraySums {
 	public static void main(String[] args) throws IOException {
 		BufferedReader f = (new BufferedReader(new InputStreamReader(System.in)));
 		PrintWriter out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
-
-		StringTokenizer st = nl(f);
-		int N = ni(st), X = ni(st);
-		int[] A = nia(N, f);
 		
-		HashMap<Long, Integer> map = new HashMap<>();
-		map.put(0l, 1);
-		
-		long s = 0, ans = 0;
-		for (int n : A) {
-			s += n;
-			long comp = s - X;
-			ans += map.getOrDefault(comp, 0);
-			map.put(s, map.getOrDefault(s, 0) + 1);
+		class Num implements Comparable<Num> {
+			int e, i;
+			Num(int e, int i) {
+				this.e = e;
+				this.i = i;
+			}
+			public int compareTo(Num o) {
+				return Integer.compare(this.e, o.e);
+			}
 		}
 		
-		out.println(ans);
+		StringTokenizer st = nl(f);
+		int N = ni(st), X = ni(st);
+		st = nl(f);
+		Num[] A = new Num[N];
+		for (int i = 0; i < N; i++) A[i] = new Num(ni(st), i+1);
+		Arrays.sort(A);
+		int i = 0, j = N-1;
+		while (i < j) {
+			int s = A[i].e + A[j].e;
+			if (s > X) {
+				j--;
+			} else if (s < X) {
+				i++;
+			} else {
+				break;
+			}
+		}
+		
+		out.println(i == j ? "IMPOSSIBLE" : A[i].i + " " + A[j].i);
 		
 		f.close();
 		out.close();
