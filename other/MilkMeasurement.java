@@ -6,7 +6,7 @@ TASK: measurement
 import java.io.*;
 import java.util.*;
 
-class S2017_1_2_MilkMeasurement {
+class MilkMeasurement {
 	static class InputReader {
 		BufferedReader reader;
 		StringTokenizer tokenizer = null;

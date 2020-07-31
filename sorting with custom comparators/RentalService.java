@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class S2018_2_2_Rental_Service {
+public class RentalService {
 	static int ni(StringTokenizer st) {
 		return Integer.parseInt(st.nextToken());
 	}

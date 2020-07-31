@@ -6,47 +6,37 @@ TASK: homework
 import java.io.*;
 import java.util.*;
 
-class S2017_1_1_MyCowAteMyHomework {
-	static class InputReader {
-		BufferedReader reader;
-		StringTokenizer tokenizer = null;
+class MyCowAteMyHomework {
+	static int ni(StringTokenizer st) {
+		return Integer.parseInt(st.nextToken());
+	}
 
-		public InputReader(InputStream stream) {
-			reader = new BufferedReader(new InputStreamReader(stream));
-		}
+	static int ni(BufferedReader f) throws IOException {
+		return Integer.parseInt(f.readLine());
+	}
 
-		public InputReader(String stream) throws FileNotFoundException {
-			reader = new BufferedReader(new FileReader(stream));
-		}
+	static StringTokenizer nl(BufferedReader f) throws IOException {
+		return new StringTokenizer(f.readLine());
+	}
 
-		public String next() {
-			if (tokenizer == null || !tokenizer.hasMoreTokens())
-				try {
-					tokenizer = new StringTokenizer(reader.readLine());
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			return tokenizer.nextToken();
-		}
-
-		public int nextInt() {
-			return Integer.parseInt(next());
-		}
-
-		public void close() throws IOException {
-			reader.close();
-		}
+	static int[] nia(int N, BufferedReader f) throws IOException {
+		StringTokenizer st = nl(f);
+		int[] A = new int[N];
+		for (int i = 0; i < N; i++)
+			A[i] = ni(st);
+		return A;
 	}
 
 	public static void main(String[] args) throws IOException {
-		InputReader f = new InputReader("homework.in");
+		BufferedReader f = new BufferedReader(new FileReader("homework.in"));
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("homework.out")));
 
-		int N = f.nextInt();
+		int N = ni(f);
 		
+		StringTokenizer st = nl(f);
 		int[] A = new int[N];
 		for (int i = 0; i < N; i++) {
-			A[i] = f.nextInt();
+			A[i] = ni(st);
 		}
 		
 		double[] pref = new double[N];

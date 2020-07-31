@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class S2018_2_1_Lifeguards {
+public class Lifeguards {
 	public static void main(String[] args) throws IOException {
 		BufferedReader f = new BufferedReader(new FileReader("lifeguards.in"));
 		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("lifeguards.out")));
