@@ -5,11 +5,11 @@
 			<attribute name="module" value="true"/>
 		</attributes>
 	</classpathentry>
-	<classpathentry kind="src" path="other"/>
 	<classpathentry kind="src" path="binary search on sorted array"/>
 	<classpathentry kind="src" path="two pointers"/>
 	<classpathentry kind="src" path="prefix sums"/>
 	<classpathentry kind="src" path="sorting with custom comparators"/>
 	<classpathentry kind="src" path="dfs"/>
+	<classpathentry kind="src" path="ordered sets"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

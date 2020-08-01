@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 //https://cses.fi/problemset/task/1619
-public class NumberOfCustomers {
+public class RestaurantCustomers {
 	static int ni(StringTokenizer st) {
 		return Integer.parseInt(st.nextToken());
 	}
