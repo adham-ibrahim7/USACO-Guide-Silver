@@ -1,6 +1,6 @@
 import java.util.*;
 import java.io.*;
-
+//SKIPPED
 public class Triangles {
 	static int ni(StringTokenizer st) {
 		return Integer.parseInt(st.nextToken());
