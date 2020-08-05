@@ -1,68 +1,25 @@
 import java.util.*;
 import java.io.*;
-//https://cses.fi/problemset/task/1188
-public class BitInversions {
+
+public class RangeXORQueries {
 	public static void main(String[] args) throws IOException {
 		setIO();
-		
-		char[] s = f.readLine().toCharArray();
-		N = s.length;
-		
-		ts = new TreeSet<>();
-		ms = new TreeMap<>();
-		
-		for (int i = 0; i < N; i++) {
-			if (i == 0 || s[i] != s[i-1]) ts.add(i);
-			if (i == N-1 || s[i] != s[i+1]) ts.add(i+1);
-		}
-		
-		for (int n : ts) {
-			if (n > 0) add(n - ts.lower(n));
-		}
-		
-		int Q = ni();
+
 		StringTokenizer st = nl();
-		while (Q-- > 0) {
-			int x = ni(st);
-			modify(x);
-			modify(x-1);
-			out.print(ms.lastKey() + " ");
+		int N = ni(st), Q = ni(st);
+		int[] A = nia(N);
+		int[] pre = new int[N+1];
+		for (int i = 0; i < N; i++) {
+			pre[i+1] = pre[i] ^ A[i];
 		}
-		out.println();
+		while (Q-- > 0) {
+			st = nl();
+			int L = ni(st), R = ni(st);
+			out.println(pre[R] ^ pre[L-1]);
+		}
 		
 		f.close();
 		out.close();
-	}
-	
-	static int N;
-	static TreeSet<Integer> ts;
-	static TreeMap<Integer, Integer> ms;
-	
-	static void modify(int x) {
-		if (x == 0 || x == N) return;
-		int a = ts.lower(x), b = ts.higher(x);
-		if (ts.contains(x)) {
-			ts.remove(x);
-			delete(x - a);
-			delete(b - x);
-			add(b - a);
-		} else {
-			ts.add(x);
-			delete(b - a);
-			add(x - a);
-			add(b - x);
-		}
-	}
-	
-	static void add(int x) {
-		ms.put(x, ms.getOrDefault(x, 0) + 1);
-	}
-	
-	static void delete(int x) {
-		if (x == 0) return;
-		int c = ms.get(x);
-		ms.put(x, --c);
-		if (c == 0) ms.remove(x);
 	}
 
 	static final int MOD = 1000000007;
