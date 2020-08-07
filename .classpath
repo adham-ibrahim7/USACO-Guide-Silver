@@ -11,5 +11,7 @@
 	<classpathentry kind="src" path="sorting with custom comparators"/>
 	<classpathentry kind="src" path="dfs"/>
 	<classpathentry kind="src" path="ordered sets"/>
+	<classpathentry kind="src" path="binary search for answer"/>
+	<classpathentry kind="src" path="greedy with sorting"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

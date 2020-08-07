@@ -65,8 +65,6 @@ public class BitInversions {
 		if (c == 0) ms.remove(x);
 	}
 
-	static final int MOD = 1000000007;
-
 	static BufferedReader f;
 	static PrintWriter out;
 
