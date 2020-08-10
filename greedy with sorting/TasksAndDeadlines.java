@@ -1,55 +1,24 @@
 import java.util.*;
 import java.io.*;
 
-public class DiamondCollector {
+public class TasksAndDeadlines {
 	public static void main(String[] args) throws IOException {
-		setIO("diamond");
+		setIO();
 
-		st = nl();
-		int N = ni(st);
-		int K = ni(st);
-		int[] A = new int[N];
-		for (int i = 0; i < N; i++) A[i] = ni();
-		Arrays.sort(A);
-		
-		int[] left = new int[N];
-		int j = 0;
+		int N = ni();
+		Task[] tasks = new Task[N];
 		for (int i = 0; i < N; i++) {
-			while (A[i] - A[j] > K) {
-				j++;
-			}
-			
-			left[i] = i - j + 1;
+			st = nl();
+			int a = ni(st), d = ni(st);
+			tasks[i] = new Task(a, d);
 		}
+		Arrays.sort(tasks);
 		
-		int[] right = new int[N];
-		j = N-1;
-		for (int i = N-1; i >= 0; i--) {
-			while (A[j] - A[i] > K) {
-				j--;
-			}
-			
-			right[i] = j - i + 1;
-		}
-		
-		int[] bestLeft = new int[N];
+		long s = 0, ans = 0;
 		for (int i = 0; i < N; i++) {
-			bestLeft[i] = left[i];
-			if (i > 0) bestLeft[i] = Math.max(bestLeft[i], bestLeft[i-1]);
+			s += tasks[i].a;
+			ans += tasks[i].d - s;
 		}
-		
-		int[] bestRight = new int[N];
-		for (int i = N-1; i >= 0; i--) {
-			bestRight[i] = right[i];
-			if (i < N-1) bestRight[i] = Math.max(bestRight[i], bestRight[i+1]);
-		}
-		
-		int ans = 0;
-		for (int i = 0; i < N-1; i++) {
-			ans = Math.max(ans, bestLeft[i] + bestRight[i+1]);
-		}
-		
-		//out.println(Arrays.toString(left) + Arrays.toString(right));
 		
 		out.println(ans);
 		
@@ -57,6 +26,18 @@ public class DiamondCollector {
 		out.close();
 	}
 	
+	static class Task implements Comparable<Task> {
+		int a, d;
+		Task(int a, int d) {
+			this.a = a;
+			this.d = d;
+		}
+		
+		public int compareTo(Task o) {
+			return Integer.compare(this.a, o.a);
+		}
+	}
+
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;

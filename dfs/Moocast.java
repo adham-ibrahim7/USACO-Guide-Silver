@@ -1,55 +1,37 @@
 import java.util.*;
 import java.io.*;
 
-public class DiamondCollector {
+public class Moocast {
 	public static void main(String[] args) throws IOException {
-		setIO("diamond");
+		setIO("moocast");
 
-		st = nl();
-		int N = ni(st);
-		int K = ni(st);
-		int[] A = new int[N];
-		for (int i = 0; i < N; i++) A[i] = ni();
-		Arrays.sort(A);
-		
-		int[] left = new int[N];
-		int j = 0;
+		int N = ni();
+		Cow[] cow = new Cow[N];
+		adj = new LinkedList[N];
 		for (int i = 0; i < N; i++) {
-			while (A[i] - A[j] > K) {
-				j++;
-			}
-			
-			left[i] = i - j + 1;
+			st = nl();
+			int x = ni(st), y = ni(st), p = ni(st);
+			cow[i] = new Cow(x, y, p);
+			adj[i] = new LinkedList<>();
 		}
 		
-		int[] right = new int[N];
-		j = N-1;
-		for (int i = N-1; i >= 0; i--) {
-			while (A[j] - A[i] > K) {
-				j--;
-			}
-			
-			right[i] = j - i + 1;
-		}
-		
-		int[] bestLeft = new int[N];
 		for (int i = 0; i < N; i++) {
-			bestLeft[i] = left[i];
-			if (i > 0) bestLeft[i] = Math.max(bestLeft[i], bestLeft[i-1]);
-		}
-		
-		int[] bestRight = new int[N];
-		for (int i = N-1; i >= 0; i--) {
-			bestRight[i] = right[i];
-			if (i < N-1) bestRight[i] = Math.max(bestRight[i], bestRight[i+1]);
+			for (int j = 0; j < N; j++) {
+				if (i == j) continue;
+				
+				if (distsq(cow[i], cow[j]) <= cow[i].p * cow[i].p) {
+					adj[i].add(j);
+				}
+			}
 		}
 		
 		int ans = 0;
-		for (int i = 0; i < N-1; i++) {
-			ans = Math.max(ans, bestLeft[i] + bestRight[i+1]);
+		for (int i = 0; i < N; i++) {
+			vis = new boolean[N];
+			count = 0;
+			dfs(i);
+			ans = Math.max(ans, count);
 		}
-		
-		//out.println(Arrays.toString(left) + Arrays.toString(right));
 		
 		out.println(ans);
 		
@@ -57,6 +39,31 @@ public class DiamondCollector {
 		out.close();
 	}
 	
+	static int distsq(Cow a, Cow b) {
+		return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
+	}
+	
+	static LinkedList<Integer> adj[];
+	
+	static int count = 0;
+	static boolean[] vis;
+	
+	static void dfs(int u) {
+		if (vis[u]) return;
+		vis[u] = true;
+		count++;
+		for (int v : adj[u]) dfs(v);
+	}
+	
+	static class Cow {
+		int x, y, p;
+		Cow(int x, int y, int p) {
+			this.x = x;
+			this.y = y;
+			this.p = p;
+		}
+	}
+
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;

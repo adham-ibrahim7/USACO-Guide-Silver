@@ -1,62 +1,41 @@
 import java.util.*;
 import java.io.*;
 
-public class DiamondCollector {
+public class FactoryMachines {
 	public static void main(String[] args) throws IOException {
-		setIO("diamond");
+		setIO();
 
 		st = nl();
-		int N = ni(st);
-		int K = ni(st);
-		int[] A = new int[N];
-		for (int i = 0; i < N; i++) A[i] = ni();
-		Arrays.sort(A);
+		N = ni(st); T = ni(st);
+		A = nia(N);
 		
-		int[] left = new int[N];
-		int j = 0;
-		for (int i = 0; i < N; i++) {
-			while (A[i] - A[j] > K) {
-				j++;
+		long t = (long) 1e18;
+		for (long b = (long) 5e17; b >= 1; b /= 2) {
+			while (t - b >= 0 && valid(t - b)) {
+				t -= b;
 			}
-			
-			left[i] = i - j + 1;
 		}
 		
-		int[] right = new int[N];
-		j = N-1;
-		for (int i = N-1; i >= 0; i--) {
-			while (A[j] - A[i] > K) {
-				j--;
-			}
-			
-			right[i] = j - i + 1;
-		}
-		
-		int[] bestLeft = new int[N];
-		for (int i = 0; i < N; i++) {
-			bestLeft[i] = left[i];
-			if (i > 0) bestLeft[i] = Math.max(bestLeft[i], bestLeft[i-1]);
-		}
-		
-		int[] bestRight = new int[N];
-		for (int i = N-1; i >= 0; i--) {
-			bestRight[i] = right[i];
-			if (i < N-1) bestRight[i] = Math.max(bestRight[i], bestRight[i+1]);
-		}
-		
-		int ans = 0;
-		for (int i = 0; i < N-1; i++) {
-			ans = Math.max(ans, bestLeft[i] + bestRight[i+1]);
-		}
-		
-		//out.println(Arrays.toString(left) + Arrays.toString(right));
-		
-		out.println(ans);
+		out.println(t);
 		
 		f.close();
 		out.close();
 	}
 	
+	static int N, T;
+	static int[] A;
+	
+	static boolean valid(long t) {
+		long s = 0;
+		
+		for (int n : A) {
+			s += t / n;
+			if (s >= T) return true;
+		}
+		
+		return false;
+	}
+
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;

@@ -1,62 +1,32 @@
 import java.util.*;
 import java.io.*;
 
-public class DiamondCollector2 {
+public class CellularNetwork {
 	public static void main(String[] args) throws IOException {
-		setIO("diamond");
+		setIO();
 
 		st = nl();
-		int N = ni(st);
-		int K = ni(st);
-		int[] A = new int[N];
-		for (int i = 0; i < N; i++) A[i] = ni();
-		Arrays.sort(A);
+		int N = ni(st), M = ni(st);
+		int[] A = nia(N), B = nia(M);
 		
-		int[] left = new int[N];
-		int j = 0;
+		int j = 0, ans = 0;
 		for (int i = 0; i < N; i++) {
-			while (A[i] - A[j] > K) {
+			while (j < M-1 && A[i] > B[j+1]) {
 				j++;
 			}
 			
-			left[i] = i - j + 1;
-		}
-		
-		int[] right = new int[N];
-		j = N-1;
-		for (int i = N-1; i >= 0; i--) {
-			while (A[j] - A[i] > K) {
-				j--;
-			}
+			int left = j == M ? (int) 2e9 : Math.abs(A[i] - B[j]);
+			int right = j == M-1 ? (int) 2e9 : Math.abs(B[j+1] - A[i]);
 			
-			right[i] = j - i + 1;
+			ans = Math.max(ans, Math.min(left, right));
 		}
-		
-		int[] bestLeft = new int[N];
-		for (int i = 0; i < N; i++) {
-			bestLeft[i] = left[i];
-			if (i > 0) bestLeft[i] = Math.max(bestLeft[i], bestLeft[i-1]);
-		}
-		
-		int[] bestRight = new int[N];
-		for (int i = N-1; i >= 0; i--) {
-			bestRight[i] = right[i];
-			if (i < N-1) bestRight[i] = Math.max(bestRight[i], bestRight[i+1]);
-		}
-		
-		int ans = 0;
-		for (int i = 0; i < N-1; i++) {
-			ans = Math.max(ans, bestLeft[i] + bestRight[i+1]);
-		}
-		
-		//out.println(Arrays.toString(left) + Arrays.toString(right));
 		
 		out.println(ans);
 		
 		f.close();
 		out.close();
 	}
-	
+
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;
