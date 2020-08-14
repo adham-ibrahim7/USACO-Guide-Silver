@@ -1,62 +1,47 @@
 import java.util.*;
 import java.io.*;
 
-public class MovieFestival2 {
+public class SleepyCowHerding {
 	public static void main(String[] args) throws IOException {
-		setIO();
+		setIO("herding");
 
-		st = nl();
-		int N = ni(st), K = ni(st);
-		Movie[] M = new Movie[N];
-		for (int i = 0; i < N; i++) {
-			st = nl();
-			int s = ni(st), e = ni(st);
-			M[i] = new Movie(s, e);
-		}
-		Arrays.sort(M);
+		int N = ni();
+		int[] A = new int[N];
+		for (int i = 0; i < N; i++) A[i] = ni();
+		Arrays.sort(A);
 		
-		ms.put(0, K);
-		
-		int ans = 0;
-		for (int i = 0; i < N; i++) {
-			Integer k = ms.floorKey(M[i].s);
-			if (k != null) {
-				delete(k);
-				add(M[i].e);
-				
-				ans++;
+		int min;
+		if (A[N-2]-A[0] == N-2 && A[N-1]-A[N-2]>2) min = 2;
+		if (A[N-1]-A[1] == N-2 && A[1]-A[0]>2) min = 2;
+		else {
+			int i, j=0, best=0;
+			for (i=0; i<N; i++) {
+				while (j<N-1 && A[j+1]-A[i]<=N-1) j++;
+				best = Math.max(best, j-i+1);
 			}
+			min = N - best;
 		}
+		int max = Math.max(A[N-2]-A[0], A[N-1]-A[1]) - (N-2);
 		
-		out.println(ans);
+		out.println(min + "\n" + max);
 		
 		f.close();
 		out.close();
 	}
 	
-	static TreeMap<Integer, Integer> ms = new TreeMap<>();
-
-	static void add(int x) {
-		ms.put(x, ms.getOrDefault(x, 0) + 1);
-	}
-
-	static void delete(int x) {
-		int c = ms.get(x);
-		ms.put(x, --c);
-		if (c == 0)
-			ms.remove(x);
-	}
-	
-	static class Movie implements Comparable<Movie> {
-		int s, e;
-		Movie(int s, int e) {
-			this.s = s;
-			this.e = e;
+	static int range(int[] A, int L, int R) {
+		int N = A.length;
+		
+		int i = 0, j = N-1;
+		for (int b = N / 2; b >= 1; b /= 2) {
+			while (i+b < N && A[i+b] <= L) i += b;
+			while (j-b >= 0 && A[j-b] >= R) j -= b;
 		}
 		
-		public int compareTo(Movie o) {
-			return Integer.compare(this.e, o.e);
-		}
+		if (A[i] < L) i++;
+		if (A[j] > R) j--;
+		
+		return j - i + 1;
 	}
 
 	static BufferedReader f;
@@ -67,8 +52,16 @@ public class MovieFestival2 {
 		return Integer.parseInt(st.nextToken());
 	}
 
+	static long nlg(StringTokenizer st) {
+		return Long.parseLong(st.nextToken());
+	}
+
 	static int ni() throws IOException {
 		return Integer.parseInt(f.readLine());
+	}
+
+	static long nlg() throws IOException {
+		return Long.parseLong(f.readLine());
 	}
 
 	static StringTokenizer nl() throws IOException {

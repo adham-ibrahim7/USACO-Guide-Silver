@@ -1,61 +1,64 @@
 import java.util.*;
 import java.io.*;
 
-public class MovieFestival2 {
+public class BirthdayParty {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		setIO();
 
-		st = nl();
-		int N = ni(st), K = ni(st);
-		Movie[] M = new Movie[N];
-		for (int i = 0; i < N; i++) {
+		while (true) {
 			st = nl();
-			int s = ni(st), e = ni(st);
-			M[i] = new Movie(s, e);
-		}
-		Arrays.sort(M);
-		
-		ms.put(0, K);
-		
-		int ans = 0;
-		for (int i = 0; i < N; i++) {
-			Integer k = ms.floorKey(M[i].s);
-			if (k != null) {
-				delete(k);
-				add(M[i].e);
-				
-				ans++;
+			int N = ni(st), M = ni(st);
+			if (N+M == 0) break;
+			
+			adj = new LinkedList[N];
+			for (int i = 0; i < N; i++) adj[i] = new LinkedList<>();
+			
+			int[][] Q = new int[M][2];
+			for (int i = 0; i < M; i++) {
+				st = nl();
+				int u = ni(st), v = ni(st);
+				adj[u].add(v);
+				adj[v].add(u);
+				Q[i] = new int[] {u, v};
 			}
+			
+			boolean verygood = true;
+			for (int i = 0; i < M; i++) {
+				vis = new boolean[N];
+				
+				dfs(0, Q[i][0], Q[i][1]);
+				
+				boolean good = true;
+				for (boolean b : vis) {
+					if (!b) {
+						good = false;
+						break;
+					}
+				}
+				
+				if (!good) {
+					verygood = false;
+					break;
+				}
+			}
+			
+			out.println(verygood ? "No" : "Yes");
 		}
-		
-		out.println(ans);
 		
 		f.close();
 		out.close();
 	}
-	
-	static TreeMap<Integer, Integer> ms = new TreeMap<>();
 
-	static void add(int x) {
-		ms.put(x, ms.getOrDefault(x, 0) + 1);
-	}
-
-	static void delete(int x) {
-		int c = ms.get(x);
-		ms.put(x, --c);
-		if (c == 0)
-			ms.remove(x);
-	}
+	static LinkedList<Integer> adj[];
+	static boolean[] vis;
 	
-	static class Movie implements Comparable<Movie> {
-		int s, e;
-		Movie(int s, int e) {
-			this.s = s;
-			this.e = e;
-		}
-		
-		public int compareTo(Movie o) {
-			return Integer.compare(this.e, o.e);
+	static void dfs(int u, int a, int b) {
+		if (vis[u]) return;
+		vis[u] = true;
+		for (int v : adj[u]) {
+			if (!(u == a && v == b || 
+				u == b && v == a)) dfs(v, a, b);
 		}
 	}
 
@@ -67,8 +70,16 @@ public class MovieFestival2 {
 		return Integer.parseInt(st.nextToken());
 	}
 
+	static long nlg(StringTokenizer st) {
+		return Long.parseLong(st.nextToken());
+	}
+
 	static int ni() throws IOException {
 		return Integer.parseInt(f.readLine());
+	}
+
+	static long nlg() throws IOException {
+		return Long.parseLong(f.readLine());
 	}
 
 	static StringTokenizer nl() throws IOException {

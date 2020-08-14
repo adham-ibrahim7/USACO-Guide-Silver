@@ -1,31 +1,22 @@
 import java.util.*;
 import java.io.*;
 
-public class MovieFestival2 {
+public class StickDivisions {
 	public static void main(String[] args) throws IOException {
 		setIO();
 
 		st = nl();
-		int N = ni(st), K = ni(st);
-		Movie[] M = new Movie[N];
-		for (int i = 0; i < N; i++) {
-			st = nl();
-			int s = ni(st), e = ni(st);
-			M[i] = new Movie(s, e);
-		}
-		Arrays.sort(M);
+		int X = ni(st), N = ni(st);
+		ms = new TreeMap<Integer, Integer>();
+		st = nl();
+		for (int i = 0; i < N; i++) add(ni(st));
 		
-		ms.put(0, K);
+		long ans = 0;
 		
-		int ans = 0;
-		for (int i = 0; i < N; i++) {
-			Integer k = ms.floorKey(M[i].s);
-			if (k != null) {
-				delete(k);
-				add(M[i].e);
-				
-				ans++;
-			}
+		for (int i = 0; i < N-1; i++) {
+			int s = delete(ms.firstKey()) + delete(ms.firstKey());
+			ans += s;
+			add(s);
 		}
 		
 		out.println(ans);
@@ -34,29 +25,18 @@ public class MovieFestival2 {
 		out.close();
 	}
 	
-	static TreeMap<Integer, Integer> ms = new TreeMap<>();
+	static TreeMap<Integer, Integer> ms;
 
 	static void add(int x) {
 		ms.put(x, ms.getOrDefault(x, 0) + 1);
 	}
 
-	static void delete(int x) {
+	static int delete(int x) {
 		int c = ms.get(x);
 		ms.put(x, --c);
 		if (c == 0)
 			ms.remove(x);
-	}
-	
-	static class Movie implements Comparable<Movie> {
-		int s, e;
-		Movie(int s, int e) {
-			this.s = s;
-			this.e = e;
-		}
-		
-		public int compareTo(Movie o) {
-			return Integer.compare(this.e, o.e);
-		}
+		return x;
 	}
 
 	static BufferedReader f;
@@ -67,8 +47,16 @@ public class MovieFestival2 {
 		return Integer.parseInt(st.nextToken());
 	}
 
+	static long nlg(StringTokenizer st) {
+		return Long.parseLong(st.nextToken());
+	}
+
 	static int ni() throws IOException {
 		return Integer.parseInt(f.readLine());
+	}
+
+	static long nlg() throws IOException {
+		return Long.parseLong(f.readLine());
 	}
 
 	static StringTokenizer nl() throws IOException {
