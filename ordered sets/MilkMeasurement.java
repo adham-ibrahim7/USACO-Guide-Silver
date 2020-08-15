@@ -1,109 +1,134 @@
-/*
-ID: adhamib1
-LANG: JAVA
-TASK: measurement
-*/
-import java.io.*;
 import java.util.*;
-//http://www.usaco.org/index.php?page=viewproblem2&cpid=763
-class MilkMeasurement {
-	static class InputReader {
-		BufferedReader reader;
-		StringTokenizer tokenizer = null;
+import java.io.*;
 
-		public InputReader(InputStream stream) {
-			reader = new BufferedReader(new InputStreamReader(stream));
-		}
-
-		public InputReader(String stream) throws FileNotFoundException {
-			reader = new BufferedReader(new FileReader(stream));
-		}
-
-		public String next() {
-			if (tokenizer == null || !tokenizer.hasMoreTokens())
-				try {
-					tokenizer = new StringTokenizer(reader.readLine());
-				} catch (IOException e) {
-					throw new RuntimeException(e);
-				}
-			return tokenizer.nextToken();
-		}
-
-		public int nextInt() {
-			return Integer.parseInt(next());
-		}
-
-		public void close() throws IOException {
-			reader.close();
-		}
-	}
-
+public class MilkMeasurement {
 	public static void main(String[] args) throws IOException {
-		InputReader sc = new InputReader("measurement.in");
-		PrintWriter out = new PrintWriter(new BufferedWriter(new FileWriter("measurement.out")));
+		setIO("measurement");
 
-		int N = sc.nextInt(), G = sc.nextInt();
-		
-		class Log implements Comparable<Log> {
-			int time, cow, diff;
-			
-			Log(int time, int cow, int diff) {
-				this.time = time;
-				this.cow = cow;
-				this.diff = diff;
-			}
-			
-			public int compareTo(Log o) {
-				return this.time - o.time;
-			}
-		}
-		
+		st = nl();
+		int N = ni(st), G = ni(st);
 		Log[] logs = new Log[N];
-		
 		for (int i = 0; i < N; i++) {
-			int time = sc.nextInt(), cow = sc.nextInt(), diff = sc.nextInt();
-			
+			st = nl();
+			int time = ni(st), cow = ni(st), diff = ni(st);
 			logs[i] = new Log(time, cow, diff);
 		}
-		
 		Arrays.sort(logs);
 		
-		HashMap<Integer, Integer> map = new HashMap<>();
-		TreeMap<Integer, Integer> counts = new TreeMap<>();
+		ms.put(0, (int) 1e9);
 		
-		counts.put(G, (int) 1e6);
+		TreeMap<Integer, Integer> gallons = new TreeMap<>();
 		
-		int ans = 0;
-		
+		int prevBest = 0, prevCount = (int) 1e9, ans = 0;
 		for (Log log : logs) {
 			int cow = log.cow, diff = log.diff;
 			
-			int prev = map.getOrDefault(cow, G);
+			int prev = gallons.getOrDefault(cow, 0);
+			boolean wasBest = ms.lastKey() == prev;
 			
-			boolean wasBest = prev == counts.lastKey();
-			int wascount = counts.get(prev);
-			counts.put(prev, counts.get(prev) - 1);
-			if (counts.get(prev) == 0) counts.remove(prev);
+			delete(prev);
+			gallons.put(cow, prev + diff);
+			add(prev + diff);
 			
-			int curr = prev + diff;
+			int best = ms.lastKey(), bestCount = ms.get(best);
 			
-			counts.put(curr, counts.getOrDefault(curr, 0) + 1);
-			
-			boolean isBest = curr == counts.lastKey();
-			
-			if (wasBest) {
-				if (!isBest || wascount != 1 || counts.get(curr) != 1) {
-					ans++;
-				}
-			} else if (isBest) {
+			boolean isBest = best == prev+diff;
+			if ((prevBest != best && !(wasBest && prevCount == 1 && isBest) || prevCount != bestCount)) {
 				ans++;
 			}
-			
-			map.put(cow, curr);
+			prevBest = best; prevCount = bestCount;
 		}
+		
 		out.println(ans);
 		
-		sc.close();
+		f.close();
 		out.close();
 	}
+	
+	static TreeMap<Integer, Integer> ms = new TreeMap<>();
+
+	static void add(int x) {
+		ms.put(x, ms.getOrDefault(x, 0) + 1);
+	}
+
+	static int delete(int x) {
+		int c = ms.get(x);
+		ms.put(x, --c);
+		if (c == 0)
+			ms.remove(x);
+		return x;
+	}
+	
+	static class Log implements Comparable<Log> {
+		int time, cow, diff;
+		Log(int t, int c, int d) {
+			time = t;
+			cow = c;
+			diff = d;
+		}
+		
+		public int compareTo(Log o) {
+			return Integer.compare(this.time, o.time);
+		}
+	}
+
+	static BufferedReader f;
+	static PrintWriter out;
+	static StringTokenizer st;
+
+	static int ni(StringTokenizer st) {
+		return Integer.parseInt(st.nextToken());
+	}
+
+	static long nlg(StringTokenizer st) {
+		return Long.parseLong(st.nextToken());
+	}
+
+	static int ni() throws IOException {
+		return Integer.parseInt(f.readLine());
+	}
+
+	static long nlg() throws IOException {
+		return Long.parseLong(f.readLine());
+	}
+
+	static StringTokenizer nl() throws IOException {
+		return new StringTokenizer(f.readLine());
+	}
+
+	static int[] nia(int N) throws IOException {
+		StringTokenizer st = nl();
+		int[] A = new int[N];
+		for (int i = 0; i < N; i++)
+			A[i] = ni(st);
+		return A;
+	}
+
+	static void setIn(String s) throws IOException {
+		f = new BufferedReader(new FileReader(s));
+	}
+
+	static void setOut(String s) throws IOException {
+		out = new PrintWriter(new FileWriter(s));
+	}
+
+	static void setIn() {
+		f = new BufferedReader(new InputStreamReader(System.in));
+	}
+
+	static void setOut() {
+		out = new PrintWriter(new BufferedWriter(new OutputStreamWriter(System.out)));
+	}
+
+	static void setIO(String s) throws IOException {
+		setIn(s + ".in");
+		setOut(s + ".out");
+	}
+
+	static void setIO() {
+		setIn();
+		setOut();
+	}
 }
+
+

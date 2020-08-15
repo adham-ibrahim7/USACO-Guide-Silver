@@ -1,68 +1,32 @@
 import java.util.*;
 import java.io.*;
 
-public class Moocast {
-	@SuppressWarnings("unchecked")
+public class HighCardWins {
 	public static void main(String[] args) throws IOException {
-		setIO("moocast");
+		setIO("highcard");
 
 		int N = ni();
-		Cow[] cow = new Cow[N];
-		adj = new LinkedList[N];
-		for (int i = 0; i < N; i++) {
-			st = nl();
-			int x = ni(st), y = ni(st), p = ni(st);
-			cow[i] = new Cow(x, y, p);
-			adj[i] = new LinkedList<>();
-		}
+		TreeSet<Integer> ts = new TreeSet<>();
+		for (int i = 1; i <= 2 * N; i++) ts.add(i);
 		
+		int[] Q = new int[N];
 		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < N; j++) {
-				if (i == j) continue;
-				
-				if (distsq(cow[i], cow[j]) <= cow[i].p * cow[i].p) {
-					adj[i].add(j);
-				}
-			}
+			Q[i] = ni();
+			ts.remove(Q[i]);
 		}
 		
 		int ans = 0;
-		for (int i = 0; i < N; i++) {
-			vis = new boolean[N];
-			count = 0;
-			dfs(i);
-			ans = Math.max(ans, count);
+		for (int n : Q) {
+			if (ts.higher(n) != null) {
+				ts.remove(ts.higher(n));
+				ans++;
+			}
 		}
 		
 		out.println(ans);
 		
 		f.close();
 		out.close();
-	}
-	
-	static int distsq(Cow a, Cow b) {
-		return (a.x - b.x) * (a.x - b.x) + (a.y - b.y) * (a.y - b.y);
-	}
-	
-	static LinkedList<Integer> adj[];
-	
-	static int count = 0;
-	static boolean[] vis;
-	
-	static void dfs(int u) {
-		if (vis[u]) return;
-		vis[u] = true;
-		count++;
-		for (int v : adj[u]) dfs(v);
-	}
-	
-	static class Cow {
-		int x, y, p;
-		Cow(int x, int y, int p) {
-			this.x = x;
-			this.y = y;
-			this.p = p;
-		}
 	}
 
 	static BufferedReader f;
@@ -73,8 +37,16 @@ public class Moocast {
 		return Integer.parseInt(st.nextToken());
 	}
 
+	static long nlg(StringTokenizer st) {
+		return Long.parseLong(st.nextToken());
+	}
+
 	static int ni() throws IOException {
 		return Integer.parseInt(f.readLine());
+	}
+
+	static long nlg() throws IOException {
+		return Long.parseLong(f.readLine());
 	}
 
 	static StringTokenizer nl() throws IOException {
