@@ -1,49 +1,56 @@
 import java.util.*;
 import java.io.*;
 
-public class MagicShip {
+public class BuildingTeams {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		setIO();
 
 		st = nl();
-		x = ni(st); y = ni(st);
+		int N = ni(st), M = ni(st);
 		
-		st = nl();
-		x = ni(st) - x; y = ni(st) - y;
+		adj = new LinkedList[N+1];
+		for (int i = 0; i <= N; i++) adj[i] = new LinkedList<>();
 		
-		N = ni();
-		s = rl().toCharArray();
-		
-		dx = new int[N+1];
-		dy = new int[N+1];
-		
-		for (int i = 0; i < N; i++) {
-			dx[i+1] = dx[i] + (s[i] == 'L' ? -1 : s[i] == 'R' ? 1 : 0);
-			dy[i+1] = dy[i] + (s[i] == 'D' ? -1 : s[i] == 'U' ? 1 : 0);
+		while (M-- > 0) {
+			st = nl();
+			int a = ni(st), b = ni(st);
+			adj[a].add(b);
+			adj[b].add(a);
 		}
 		
-		long MAX = (long) 1e18, k = MAX;
-		for (long b = MAX / 2; b >= 1; b /= 2) {
-			while (k-b >= 0 && valid(k-b)) k -= b;
+		boolean ans = true;
+		mark = new int[N+1];
+		for (int i = 1; i <= N; i++) {
+			if (mark[i] == 0 &&!dfs(i, 1)) {
+				ans = false;
+				break;
+			}
 		}
 		
-		out.println(k == MAX ? -1 : k);
+		if (ans) {
+			for (int i = 1; i <= N; i++) out.print(mark[i] + " ");
+			out.println();
+		} else {
+			out.println("IMPOSSIBLE");
+		}
 		
 		f.close();
 		out.close();
 	}
 	
-	static int x, y;
 	static int N;
-	static char[] s;
-	static int[] dx, dy;
+	static LinkedList<Integer> adj[];
+	static int[] mark;
 	
-	static long query(int[] dz, long k) {
-		return dz[N] * (k / N) + dz[(int) (k % N)];
-	}
-	
-	static boolean valid(long k) {
-		return Math.abs(x - query(dx, k)) + Math.abs(y - query(dy, k)) <= k;
+	static boolean dfs(int u, int c) {
+		if (mark[u] != 0) return mark[u] == c;
+		mark[u] = c;
+		
+		for (int v : adj[u]) {
+			if (!dfs(v, c == 1 ? 2 : 1)) return false;
+		}
+		return true;
 	}
 
 	static BufferedReader f;

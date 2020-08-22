@@ -1,49 +1,64 @@
 import java.util.*;
 import java.io.*;
 
-public class MagicShip {
+public class Meeting {
 	public static void main(String[] args) throws IOException {
 		setIO();
 
-		st = nl();
-		x = ni(st); y = ni(st);
-		
-		st = nl();
-		x = ni(st) - x; y = ni(st) - y;
-		
 		N = ni();
-		s = rl().toCharArray();
+		x = nia(N);
+		v = nia(N);
 		
-		dx = new int[N+1];
-		dy = new int[N+1];
-		
-		for (int i = 0; i < N; i++) {
-			dx[i+1] = dx[i] + (s[i] == 'L' ? -1 : s[i] == 'R' ? 1 : 0);
-			dy[i+1] = dy[i] + (s[i] == 'D' ? -1 : s[i] == 'U' ? 1 : 0);
+		double MAX = (int) 1e9, t = MAX;
+		for (double b = MAX / 2; b >= 0.0000001; b /= 2) {
+			while (t-b >= 0 && valid(t-b)) t -= b;
 		}
 		
-		long MAX = (long) 1e18, k = MAX;
-		for (long b = MAX / 2; b >= 1; b /= 2) {
-			while (k-b >= 0 && valid(k-b)) k -= b;
-		}
-		
-		out.println(k == MAX ? -1 : k);
+		out.println(t);
 		
 		f.close();
 		out.close();
 	}
 	
-	static int x, y;
-	static int N;
-	static char[] s;
-	static int[] dx, dy;
-	
-	static long query(int[] dz, long k) {
-		return dz[N] * (k / N) + dz[(int) (k % N)];
+	static class EndPoint implements Comparable<EndPoint> {
+		double x;
+		boolean open;
+		EndPoint(double x, boolean open) {
+			this.x = x;
+			this.open = open;
+		}
+		
+		public int compareTo(EndPoint o) {
+			if (this.x == o.x) return Boolean.compare(this.open, o.open);
+			return Double.compare(this.x, o.x);
+		}
 	}
 	
-	static boolean valid(long k) {
-		return Math.abs(x - query(dx, k)) + Math.abs(y - query(dy, k)) <= k;
+	static int N;
+	static int[] x;
+	static int[] v;
+	
+	static boolean valid(double t) {
+		EndPoint[] E = new EndPoint[2*N];
+		for (int i = 0; i < N; i++) {
+			E[2*i] = new EndPoint(x[i]-v[i]*t, true);
+			E[2*i+1] = new EndPoint(x[i]+v[i]*t, false);
+		}
+		
+		Arrays.sort(E);
+		
+		int count = 0;
+		for (int i = 0; i < 2*N-1; i++) {
+			if (E[i].open) {
+				count++;
+			} else {
+				count--;
+			}
+			
+			if (count == N) return true;
+		}
+		
+		return false;
 	}
 
 	static BufferedReader f;

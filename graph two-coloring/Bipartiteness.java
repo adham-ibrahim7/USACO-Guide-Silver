@@ -1,49 +1,51 @@
 import java.util.*;
 import java.io.*;
 
-public class MagicShip {
+public class Bipartiteness {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		setIO();
 
-		st = nl();
-		x = ni(st); y = ni(st);
-		
-		st = nl();
-		x = ni(st) - x; y = ni(st) - y;
-		
 		N = ni();
-		s = rl().toCharArray();
 		
-		dx = new int[N+1];
-		dy = new int[N+1];
+		adj = new LinkedList[N+1];
+		color = new boolean[N+1];
 		
-		for (int i = 0; i < N; i++) {
-			dx[i+1] = dx[i] + (s[i] == 'L' ? -1 : s[i] == 'R' ? 1 : 0);
-			dy[i+1] = dy[i] + (s[i] == 'D' ? -1 : s[i] == 'U' ? 1 : 0);
+		for (int i = 0; i <= N; i++) adj[i] = new LinkedList<>();
+		
+		for (int i = 0; i < N-1; i++) {
+			st = nl();
+			int a = ni(st), b = ni(st);
+			adj[a].add(b);
+			adj[b].add(a);
 		}
 		
-		long MAX = (long) 1e18, k = MAX;
-		for (long b = MAX / 2; b >= 1; b /= 2) {
-			while (k-b >= 0 && valid(k-b)) k -= b;
-		}
+		r = b = 0;
+		dfs(1, 0, false);
 		
-		out.println(k == MAX ? -1 : k);
+		long ans = 0;
+		for (int i = 1; i <= N; i++) {
+			ans += (color[i] ? b : r) - adj[i].size();
+		}
+		ans /= 2;
+		out.println(ans);
 		
 		f.close();
 		out.close();
 	}
 	
-	static int x, y;
 	static int N;
-	static char[] s;
-	static int[] dx, dy;
+	static LinkedList<Integer> adj[];
+	static boolean[] color;
+	static int r, b;
 	
-	static long query(int[] dz, long k) {
-		return dz[N] * (k / N) + dz[(int) (k % N)];
-	}
-	
-	static boolean valid(long k) {
-		return Math.abs(x - query(dx, k)) + Math.abs(y - query(dy, k)) <= k;
+	static void dfs(int u, int e, boolean c) {
+		color[u] = c;
+		if (c) r++; else b++;
+		
+		for (int v : adj[u]) {
+			if (v != e) dfs(v, u, !c);
+		}
 	}
 
 	static BufferedReader f;

@@ -28,40 +28,55 @@ public class Labyrinth {
 		}
 		
 		Queue<State> q = new LinkedList<>();
-		q.add(new State(s, ""));
+		q.add(new State(s, '`', null, 0));
 		boolean[] vis = new boolean[N*M];
 		
-		String ans = "NO";
+		boolean solved = false;
 		while (!q.isEmpty()) {
 			State curr = q.poll();
 			
-			if (vis[curr.i] || A[curr.i] == '#') continue;
 			vis[curr.i] = true;
 			
 			if (curr.i == e) {
-				ans = ("YES\n" + curr.s.length() + "\n" + curr.s);
+				solved = true;
+				
+				out.println("YES\n" + curr.d);
+				
+				Stack<Character> st = new Stack<>();
+				while (curr.prev != null) {
+					st.push(curr.move);
+					curr = curr.prev;
+				}
+				
+				while (!st.isEmpty()) {
+					out.print(st.pop());
+				}
+				
 				break;
 			}
 			
-			if (curr.i % M != 0) q.add(new State(curr.i-1, curr.s+"L"));
-			if (curr.i % M != M-1) q.add(new State(curr.i+1, curr.s+"R"));
-			if (curr.i >= M) q.add(new State(curr.i-M, curr.s+"U"));
-			if (curr.i < (N-1) * M) q.add(new State(curr.i+M, curr.s+"D"));
+			if (curr.i % M != 0 && !vis[curr.i-1] && A[curr.i-1] != '#') q.add(new State(curr.i-1, 'L', curr, curr.d+1));
+			if (curr.i % M != M-1 && !vis[curr.i+1] && A[curr.i+1] != '#') q.add(new State(curr.i+1, 'R', curr, curr.d+1));
+			if (curr.i >= M && !vis[curr.i-M] && A[curr.i-M] != '#') q.add(new State(curr.i-M, 'U', curr, curr.d+1));
+			if (curr.i < (N-1) * M && !vis[curr.i+M] && A[curr.i+M] != '#') q.add(new State(curr.i+M, 'D', curr, curr.d+1));
 		}
 		
-		out.println(ans);
+		if (!solved) out.println("NO");
 		
 		f.close();
 		out.close();
 	}
 	
 	static class State {
-		int i;
-		String s;
+		int i, d;
+		char move;
+		State prev;
 		
-		State(int i, String s) {
+		State(int i, char move, State prev, int d) {
 			this.i = i;
-			this.s = s;
+			this.move = move;
+			this.prev = prev;
+			this.d = d;
 		}
 	}
 		
