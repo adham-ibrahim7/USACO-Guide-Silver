@@ -1,50 +1,44 @@
 import java.util.*;
 import java.io.*;
 
-public class CountingRooms {
+public class Subordinates {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		setIO();
+
+		int N = ni();
+		
+		adj = new LinkedList[N+1];
+		for (int i = 1; i <= N; i++) adj[i] = new LinkedList<>();
 		
 		st = nl();
-		N = ni(st);
-		M = ni(st);
-		
-		A = new char[N][M];
-		
-		for (int i = 0; i < N; i++) {
-			A[i] = rl().toCharArray();
+		for (int u = 2; u <= N; u++) {
+			int v = ni(st);
+			
+			adj[v].add(u);
 		}
 		
-		int ans = 0;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (A[i][j] == '.') {
-					dfs(i, j);
-					ans++;
-				}
-			}
-		}
+		ans = new int[N+1];
+		dfs(1, 0);
 		
-		out.println(ans);
+		for (int u = 1; u <= N; u++) out.print(ans[u] + " ");
+		out.println();
 		
 		f.close();
 		out.close();
 	}
 	
-	static int N, M;
-	static char[][] A;
+	static LinkedList<Integer>[] adj;
+	static int[] ans;
 	
-	static void dfs(int i, int j) {
-		if (i < 0 || i >= N || j < 0 || j >= M || A[i][j] != '.') return;
-		
-		A[i][j] = '#';
-		
-		dfs(i-1, j);
-		dfs(i+1, j);
-		dfs(i, j-1);
-		dfs(i, j+1);
+	static void dfs(int u, int e) {
+		ans[u] = 0;
+		for (int v : adj[u]) {
+			dfs(v, u);
+			ans[u] += 1 + ans[v];
+		}
 	}
-		
+	
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;

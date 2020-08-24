@@ -1,28 +1,36 @@
 import java.util.*;
 import java.io.*;
 
-public class CountingRooms {
+public class MooParticle {
 	public static void main(String[] args) throws IOException {
-		setIO();
+		setIO("moop");
+
+		int N = ni();
 		
-		st = nl();
-		N = ni(st);
-		M = ni(st);
-		
-		A = new char[N][M];
-		
+		Particle[] P = new Particle[N];
 		for (int i = 0; i < N; i++) {
-			A[i] = rl().toCharArray();
+			st = nl();
+			P[i] = new Particle(ni(st), ni(st));
 		}
 		
-		int ans = 0;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (A[i][j] == '.') {
-					dfs(i, j);
-					ans++;
-				}
-			}
+		Arrays.sort(P);
+		
+		int[] min = new int[N];
+		min[0] = P[0].y;
+		int[] max = new int[N];
+		max[N-1] = P[N-1].y;
+		
+		for (int i = 1; i < N; i++) {
+			min[i] = Math.min(min[i-1], P[i].y);
+		}
+		
+		for (int i = N-2; i >= 0; i--) {
+			max[i] = Math.max(max[i+1], P[i].y);
+		}
+		
+		int ans = 1;
+		for (int i = 0; i < N-1; i++) {
+			if (min[i] > max[i+1]) ans++;
 		}
 		
 		out.println(ans);
@@ -31,20 +39,19 @@ public class CountingRooms {
 		out.close();
 	}
 	
-	static int N, M;
-	static char[][] A;
-	
-	static void dfs(int i, int j) {
-		if (i < 0 || i >= N || j < 0 || j >= M || A[i][j] != '.') return;
+	static class Particle implements Comparable<Particle> {
+		int x, y;
+		Particle(int x, int y) {
+			this.x = x;
+			this.y = y;
+		}
 		
-		A[i][j] = '#';
-		
-		dfs(i-1, j);
-		dfs(i+1, j);
-		dfs(i, j-1);
-		dfs(i, j+1);
+		public int compareTo(Particle o) {
+			if (this.x == o.x) return Integer.compare(this.y, o.y);
+			return Integer.compare(this.x, o.x);
+		}
 	}
-		
+
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;

@@ -15,5 +15,6 @@
 	<classpathentry kind="src" path="greedy with sorting"/>
 	<classpathentry kind="src" path="flood fill"/>
 	<classpathentry kind="src" path="graph two-coloring"/>
+	<classpathentry kind="src" path="tree algorithms"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>

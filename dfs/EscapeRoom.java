@@ -1,50 +1,55 @@
 import java.util.*;
 import java.io.*;
 
-public class CountingRooms {
+public class EscapeRoom {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
 		setIO();
+
+		int N = ni(), M = ni();
 		
-		st = nl();
-		N = ni(st);
-		M = ni(st);
+		adj = new LinkedList[N+1][M+1];
 		
-		A = new char[N][M];
-		
-		for (int i = 0; i < N; i++) {
-			A[i] = rl().toCharArray();
-		}
-		
-		int ans = 0;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (A[i][j] == '.') {
-					dfs(i, j);
-					ans++;
+		for (int i = 1; i <= N; i++) {
+			st = nl();
+			for (int j = 1; j <= M; j++) {
+				adj[i][j] = new LinkedList<>();
+				
+				int A = ni(st);
+				
+				double s = Math.sqrt(A);
+				for (int k = 1; k <= s; k++) {
+					if (A % k == 0) {
+						int a = k, b = A / k;
+						if (a <= N && b <= M) adj[i][j].add(new Pos(a, b));
+						if (a < s && a <= M && b <= N) adj[i][j].add(new Pos(b, a));
+					}
 				}
 			}
 		}
 		
-		out.println(ans);
+		vis = new boolean[N+1][M+1];
+		dfs(1, 1);
+		out.println(vis[N][M] ? "yes" : "no");
 		
 		f.close();
 		out.close();
 	}
 	
-	static int N, M;
-	static char[][] A;
+	static LinkedList<Pos>[][] adj;
+	static boolean[][] vis;
 	
 	static void dfs(int i, int j) {
-		if (i < 0 || i >= N || j < 0 || j >= M || A[i][j] != '.') return;
-		
-		A[i][j] = '#';
-		
-		dfs(i-1, j);
-		dfs(i+1, j);
-		dfs(i, j-1);
-		dfs(i, j+1);
+		if (vis[i][j]) return;
+		vis[i][j] = true;
+		for (Pos n : adj[i][j]) dfs(n.i, n.j);
 	}
-		
+	
+	static class Pos {
+		int i, j;
+		Pos(int i, int j) {this.i = i; this.j = j;}
+	}
+
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;

@@ -1,50 +1,81 @@
 import java.util.*;
 import java.io.*;
 
-public class CountingRooms {
+public class Revegetation {
+	@SuppressWarnings("unchecked")
 	public static void main(String[] args) throws IOException {
-		setIO();
-		
+		setIO("revegetate");
+
 		st = nl();
-		N = ni(st);
-		M = ni(st);
+		N = ni(st); M = ni(st);
 		
-		A = new char[N][M];
+		adj = new LinkedList[N+1];
+		for (int i = 1; i <= N; i++) adj[i] = new LinkedList<>();
+		vis = new boolean[N+1];
+		col = new boolean[N+1];
 		
-		for (int i = 0; i < N; i++) {
-			A[i] = rl().toCharArray();
+		while (M-- > 0) {
+			st = nl();
+			
+			String s = st.nextToken();
+			int a = ni(st), b = ni(st);
+			
+			boolean same = s.equals("S");
+			adj[a].add(new Edge(b, same));
+			adj[b].add(new Edge(a, same));
 		}
 		
-		int ans = 0;
-		for (int i = 0; i < N; i++) {
-			for (int j = 0; j < M; j++) {
-				if (A[i][j] == '.') {
-					dfs(i, j);
-					ans++;
+		boolean good = true;
+		int cc = 0;
+		for (int i = 1; i <= N; i++) {
+			if (!vis[i]) {
+				if (dfs(i, true, true)) cc++;
+				else {
+					good = false;
+					break;
 				}
 			}
 		}
 		
-		out.println(ans);
+		if (good) {
+			out.print(1);
+			while (cc-- > 0) out.print(0);
+		} else {
+			out.println(0);
+		}
 		
 		f.close();
 		out.close();
 	}
 	
 	static int N, M;
-	static char[][] A;
+	static boolean[] vis;
+	static boolean[] col;
+	static LinkedList<Edge>[] adj;
 	
-	static void dfs(int i, int j) {
-		if (i < 0 || i >= N || j < 0 || j >= M || A[i][j] != '.') return;
+	static boolean dfs(int u, boolean prev, boolean same) {
+		if (vis[u]) return same ? col[u] == prev : col[u] != prev;
 		
-		A[i][j] = '#';
+		vis[u] = true;
 		
-		dfs(i-1, j);
-		dfs(i+1, j);
-		dfs(i, j-1);
-		dfs(i, j+1);
+		col[u] = same ? prev : !prev;
+		
+		for (Edge e : adj[u]) {
+			if (!dfs(e.to, col[u], e.same)) return false;
+		}
+		
+		return true;
 	}
-		
+	
+	static class Edge {
+		int to;
+		boolean same;
+		Edge(int to, boolean s) {
+			this.to = to;
+			this.same = s;
+		}
+	}
+
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;
