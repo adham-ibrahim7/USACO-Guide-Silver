@@ -1,7 +1,7 @@
 import java.util.*;
 import java.io.*;
 
-public class Badge {
+public class PlanetCycles {
 	public static void main(String[] args) throws IOException {
 		setIO();
 
@@ -15,10 +15,13 @@ public class Badge {
 		
 		vis = new boolean[N+1];
 		exploring = new boolean[N+1];
+		cycle = new boolean[N+1];
+		
 		ans = new int[N+1];
+		dist = new int[N+1];
 		
 		for (int i = 1; i <= N; i++) {
-			if (!vis[i]) dfs(i);
+			if (!vis[i]) dfs(i, 1);
 		}
 		
 		for (int i = 1; i <= N; i++) {
@@ -33,37 +36,30 @@ public class Badge {
 	static int[] p;
 	
 	static boolean[] exploring; //still exploring current node u?
+	static boolean[] cycle;
 	static boolean[] vis; //node u visited at all?
 	static int[] ans; //ans for each node
+	static int[] dist;
 	
-	static int dfs(int u) {
+	static int dfs(int u, int d) {
+		if (!vis[u]) dist[u] = d;
 		vis[u] = exploring[u] = true;
 		
 		if (exploring[p[u]]) { //cycle first created
-			ans[u] = u;
+			ans[u] = d - dist[p[u]] + 1;
 			exploring[u] = false;
 			exploring[p[u]] = false;
+			cycle[u] = true;
+			cycle[p[u]] = true;
 			
-			return -1; //tell previous that cycle is created
-		} else if (vis[p[u]]) { //cycle already created
+			return ans[u]; //tell previous that cycle is created
+		} else if (vis[p[u]]) {
 			exploring[u] = false;
+			return ans[u] = ans[p[u]] + 1;
+		} else {
+			int t = dfs(p[u], d+1);
 			
-			return ans[u] = ans[p[u]];
-		} else { //no cycle yet, still exploring
-			int d = dfs(p[u]);
-			
-			if (d != -1) { //no cycle ans is d
-				exploring[u] = false;
-				
-				return ans[u] = d;
-			} else if (exploring[u]) { //previous is part of cycle
-				exploring[u] = false;
-				ans[u] = u;
-				
-				return -1;
-			} else { //this is start of cycle
-				return ans[u] = u;
-			}
+			return ans[u] = (cycle[u] && cycle[p[u]] ? t : t+1);
 		}
 	}
 	
