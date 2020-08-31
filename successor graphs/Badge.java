@@ -14,11 +14,15 @@ public class Badge {
 		}
 		
 		vis = new boolean[N+1];
-		exploring = new boolean[N+1];
+		completed = new boolean[N+1];
 		ans = new int[N+1];
 		
 		for (int i = 1; i <= N; i++) {
 			if (!vis[i]) dfs(i);
+		}
+		
+		for (int i = 1; i <= N; i++) {
+			//if (ans[i] == 0) dfs(i);
 		}
 		
 		for (int i = 1; i <= N; i++) {
@@ -32,38 +36,41 @@ public class Badge {
 	
 	static int[] p;
 	
-	static boolean[] exploring; //still exploring current node u?
-	static boolean[] vis; //node u visited at all?
-	static int[] ans; //ans for each node
+	static boolean[] completed;
+	static boolean[] vis;
+	static int[] ans;
 	
-	static int dfs(int u) {
-		vis[u] = exploring[u] = true;
-		
-		if (exploring[p[u]]) { //cycle first created
-			ans[u] = u;
-			exploring[u] = false;
-			exploring[p[u]] = false;
+	static void dfs(int u) {
+		if (vis[u]) {
+			int d = 1;
+			int v = p[u];
 			
-			return -1; //tell previous that cycle is created
-		} else if (vis[p[u]]) { //cycle already created
-			exploring[u] = false;
-			
-			return ans[u] = ans[p[u]];
-		} else { //no cycle yet, still exploring
-			int d = dfs(p[u]);
-			
-			if (d != -1) { //no cycle ans is d
-				exploring[u] = false;
-				
-				return ans[u] = d;
-			} else if (exploring[u]) { //previous is part of cycle
-				exploring[u] = false;
-				ans[u] = u;
-				
-				return -1;
-			} else { //this is start of cycle
-				return ans[u] = u;
+			while (v != u) {
+				v = p[v];
+				d++;
 			}
+			
+			completed[u] = true;
+			ans[u] = d;
+			
+			v = p[u];
+			while (v != u) {
+				completed[v] = true;
+				ans[v] = d;
+				v = p[v];
+			}
+			
+			return;
+		}
+		
+		vis[u] = true;
+		
+		if (completed[p[u]]) {
+			ans[u] = ans[p[u]] + 1;
+			completed[u] = true;
+		} else {
+			dfs(p[u]);
+			completed[u] = true;
 		}
 	}
 	

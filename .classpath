@@ -16,5 +16,6 @@
 	<classpathentry kind="src" path="flood fill"/>
 	<classpathentry kind="src" path="graph two-coloring"/>
 	<classpathentry kind="src" path="tree algorithms"/>
+	<classpathentry kind="src" path="successor graphs"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
