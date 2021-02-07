@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<module type="JAVA_MODULE" version="4">
+  <component name="NewModuleRootManager" inherit-compiler-output="true">
+    <exclude-output />
+    <content url="file://$MODULE_DIR$">
+      <sourceFolder url="file://$MODULE_DIR$/binary search for answer" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/binary search on sorted array" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/dfs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/flood fill" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/graph two-coloring" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/greedy with sorting" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/ordered sets" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/prefix sums" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/sorting with custom comparators" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/successor graphs" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/tree algorithms" isTestSource="false" />
+      <sourceFolder url="file://$MODULE_DIR$/two pointers" isTestSource="false" />
+    </content>
+    <orderEntry type="inheritedJdk" />
+    <orderEntry type="sourceFolder" forTests="false" />
+  </component>
+</module>

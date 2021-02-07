@@ -6,63 +6,97 @@ public class PlanetCycles {
 		setIO();
 
 		int N = ni();
-		
+
 		p = new int[N+1];
 		st = nl();
 		for (int i = 1; i <= N; i++) {
 			p[i] = ni(st);
 		}
-		
-		vis = new boolean[N+1];
-		exploring = new boolean[N+1];
-		cycle = new boolean[N+1];
-		
-		ans = new int[N+1];
-		dist = new int[N+1];
-		
+
+		v = new boolean[N+1];
+		u = new boolean[N+1];
+		cycle = new int[N+1];
+
 		for (int i = 1; i <= N; i++) {
-			if (!vis[i]) dfs(i, 1);
+			if (!v[i]) dfs1(i);
 		}
-		
+
+		ans = new int[N+1];
+		for (int i = 1; i <= N; i++) {
+			if (cycle[i] == i && ans[i] == 0) dfs2(i, i, 0);
+		}
+
+		for (int i = 1; i <= N; i++) {
+			if (ans[i] == 0) dfs3(i);
+		}
+
 		for (int i = 1; i <= N; i++) {
 			out.print(ans[i] + " ");
 		}
 		out.println();
-		
+
 		f.close();
 		out.close();
 	}
-	
+
 	static int[] p;
-	
-	static boolean[] exploring; //still exploring current node u?
-	static boolean[] cycle;
-	static boolean[] vis; //node u visited at all?
-	static int[] ans; //ans for each node
-	static int[] dist;
-	
-	static int dfs(int u, int d) {
-		if (!vis[u]) dist[u] = d;
-		vis[u] = exploring[u] = true;
-		
-		if (exploring[p[u]]) { //cycle first created
-			ans[u] = d - dist[p[u]] + 1;
-			exploring[u] = false;
-			exploring[p[u]] = false;
-			cycle[u] = true;
-			cycle[p[u]] = true;
-			
-			return ans[u]; //tell previous that cycle is created
-		} else if (vis[p[u]]) {
-			exploring[u] = false;
-			return ans[u] = ans[p[u]] + 1;
-		} else {
-			int t = dfs(p[u], d+1);
-			
-			return ans[u] = (cycle[u] && cycle[p[u]] ? t : t+1);
+	static boolean[] u;
+	static boolean[] v;
+	static int[] cycle;
+
+	static int[] ans;
+
+	static int dfs1(int n)
+	{
+		v[n]=u[n]=true;
+		if(u[p[n]]) //Cycle created
+		{
+			cycle[n]=n;//Nodes in cycle point to themselves
+			u[p[n]]=false;//remember where cycle started
+			u[n]=false;
+			return n != p[n] ? -1 : n;
+		}
+		else if(v[p[n]]) //You point into some already visited cycle
+		{
+			u[n]=false;
+			return cycle[n]= cycle[p[n]];
+		}
+		else
+		{
+			int t= dfs1(p[n]); //t == -1 means you are in the cycle, and thus should point to yourself. Otherwise t is the node along the cycle that you point to
+			if(t!=-1)
+			{
+				u[n]=false;
+				return cycle[n]=t;
+			}
+			else if(u[n]) //You are part of the cycle, and so is the node that points to you.
+			{
+				u[n]=false;
+				cycle[n]=n;
+				return -1;
+			}
+			else //You are the start of the cycle. Whatever points to you is not part of the cycle anymore
+				return cycle[n]=n;
 		}
 	}
-	
+
+	static void dfs2(int u, int r, int d) {
+		if (u == r && d != 0) {
+			ans[u] = d;
+			return;
+		}
+
+		dfs2(p[u], r, d+1);
+		ans[u] = ans[p[u]];
+	}
+
+	static void dfs3(int u) {
+		if (ans[u] != 0) return;
+
+		dfs3(p[u]);
+		ans[u] = 1 + ans[p[u]];
+	}
+
 	static BufferedReader f;
 	static PrintWriter out;
 	static StringTokenizer st;
